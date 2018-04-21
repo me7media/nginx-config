@@ -1,0 +1,52 @@
+﻿server {
+        listen 80;
+        server_name example.com;
+        root /home/www/laravel;
+        index index.php index.html index.htm;
+
+location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|pdf|ppt|txt|bmp|rtf|js|swf|woff|pdf|svg|otf|json|xml|svgz|tpl|html)$ {
+        root /home/ваша_папка_для_сайта_которую_вы_создали_ранее_в_директории_home;
+        access_log off;
+        expires 30d;
+        add_header Cache-Control private;
+        }
+
+location ~ \.php$ {
+        try_files $uri =404; 
+        fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+        fastcgi_index index.php;
+        include fastcgi.conf;
+        include fastcgi_params;
+        }
+
+location / {
+        try_files $uri $uri/ /index.php?q=$uri&$args;
+    }
+
+gzip                    on;
+gzip_http_version       1.0;
+gzip_min_length         1100;
+gzip_buffers           16 8k;
+gzip_types
+    # text/html is always compressed by HttpGzipModule
+    text/css
+    text/javascript
+    text/xml
+    text/plain
+    text/x-component
+    application/javascript
+    application/x-javascript
+    application/json
+    application/xml
+    application/rss+xml
+    application/atom+xml
+    font/truetype
+    font/opentype
+    application/vnd.ms-fontobject
+    image/svg+xml;
+gzip_proxied            expired no-cache no-store private auth;
+gzip_disable            "msie6";
+gzip_vary               on;
+gzip_comp_level         5;
+
+}
